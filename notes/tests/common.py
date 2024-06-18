@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 from django.urls import reverse
 from django.test import Client, TestCase
 from django.contrib.auth import get_user_model 
@@ -15,31 +17,31 @@ TITLE = 'Заголовок'
 TEXT = 'Текст'
 
 
-class URL_NAME:
-    def __init__(self, home, add, list, detail, edit, delete, success, login, logout, signup):
-        self.home = home
-        self.add = add
-        self.list = list
-        self.detail = detail
-        self.edit = edit
-        self.delete = delete
-        self.success = success
-        self.login = login
-        self.logout = logout
-        self.signup = signup
-
-
-URL = URL_NAME(
+URL_NAME_IN_VIEWS = namedtuple(
+    'NAME', (
+        'home',
+        'login',
+        'logout',
+        'signup',
+        'add',
+        'success',
+        'list',
+        'detail',
+        'edit',
+        'delete',
+    )
+)
+URL = URL_NAME_IN_VIEWS(
     reverse('notes:home'),
+    reverse('users:login'),
+    reverse('users:logout'),
+    reverse('users:signup'),
     reverse('notes:add'),
+    reverse('notes:success'),
     reverse('notes:list'),
     reverse('notes:detail', args=(SLUG,)),
     reverse('notes:edit', args=(SLUG,)),
     reverse('notes:delete', args=(SLUG,)),
-    reverse('notes:success'),
-    reverse('users:login'),
-    reverse('users:logout'),
-    reverse('users:signup'),
 )
 
 class CommonTest(TestCase):

@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from django.contrib.auth import get_user_model
 
 from notes.tests.common import CommonTest, URL
@@ -27,5 +29,5 @@ class TestContent(CommonTest):
     def test_authorized_client_has_form(self):
         for url in (URL.add, URL.edit):
             response = self.author_client.get(url)
-            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.status_code, HTTPStatus.OK)
             self.assertIsInstance(response.context['form'], NoteForm)
