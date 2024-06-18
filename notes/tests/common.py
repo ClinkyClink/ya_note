@@ -57,3 +57,21 @@ class CommonTest(TestCase):
             slug=SLUG,
             author=cls.author
         )
+        cls.first_note = { 
+            'title': 'Заголовок', 
+            'text': 'Текст', 
+            'slug': 'slug_1', 
+            'author': cls.author, 
+        } 
+        cls.second_note = { 
+            'title': 'Заголовок', 
+            'text': 'Текст', 
+            'slug': 'slug_2', 
+        } 
+        cls.note_add = cls.author_client.post( 
+            reverse('notes:add'), data=cls.first_note 
+        ) 
+        cls.edit_note_url = reverse( 
+            'notes:edit', args=(cls.first_note['slug'],) 
+        ) 
+        cls.start_notes_count = Note.objects.count()
