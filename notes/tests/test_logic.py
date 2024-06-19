@@ -1,12 +1,14 @@
 from http import HTTPStatus
 
-from .common import CommonTest
-from django.urls import reverse
 from django.contrib.auth import get_user_model
-from pytils.translit import slugify
+from django.urls import reverse
 
 from notes.forms import WARNING
 from notes.models import Note
+
+from pytils.translit import slugify
+
+from .common import CommonTest
 
 
 User = get_user_model()
@@ -14,19 +16,18 @@ User = get_user_model()
 
 class TestLogic(CommonTest):
 
+    def add_post(self, note_data):
+        return self.author_client.post(
+            reverse('notes:add'), data=note_data
+        )
 
-    def add_post(self, note_data): 
-        return self.author_client.post( 
-            reverse('notes:add'), data=note_data 
-        ) 
- 
-    def assert_note(self, note_data): 
-        note = Note.objects.get(slug=note_data['slug']) 
-        self.assertEqual(note.title, note_data['title']) 
-        self.assertEqual(note.text, note_data['text']) 
-        self.assertEqual(note.slug, note_data['slug']) 
-        self.assertEqual(note.author, self.author) 
-        
+    def assert_note(self, note_data):
+        note = Note.objects.get(slug=note_data['slug'])
+        self.assertEqual(note.title, note_data['title'])
+        self.assertEqual(note.text, note_data['text'])
+        self.assertEqual(note.slug, note_data['slug'])
+        self.assertEqual(note.author, self.author)
+
     def test_user_can_create_note(self):
         self.assertRedirects(
             self.add_post(self.second_note), reverse('notes:success')
@@ -51,14 +52,16 @@ class TestLogic(CommonTest):
 
     def test_empty_slug(self):
         self.second_note.pop('slug')
-        self.assertRedirects(self.add_post(self.second_note), reverse('notes:success'))
+        self.assertRedirects(self.add_post(self.second_note),
+                             reverse('notes:success'))
         self.assertEqual(Note.objects.count(), self.start_notes_count + 1)
         new_note = Note.objects.last()
         expected_slug = slugify(self.second_note['title'])
         self.assertEqual(new_note.slug, expected_slug)
 
     def test_author_can_edit_note(self):
-        response = self.author_client.post(self.edit_note_url, self.second_note)
+        response = self.author_client.post(self.edit_note_url,
+                                           self.second_note)
         self.assertRedirects(response, reverse('notes:success'))
         self.assert_note(self.second_note)
 

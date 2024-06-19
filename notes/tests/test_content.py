@@ -2,15 +2,14 @@ from http import HTTPStatus
 
 from django.contrib.auth import get_user_model
 
-from notes.tests.common import CommonTest, URL
 from notes.forms import NoteForm
+from notes.tests.common import CommonTest, URL
 
 
 User = get_user_model()
 
 
 class TestContent(CommonTest):
-
 
     def test_list_of_notes_for_different_users(self):
         clients = (
@@ -24,7 +23,6 @@ class TestContent(CommonTest):
                     self.assertIn(self.note, object_list)
                 else:
                     self.assertNotIn(self.note, object_list)
-
 
     def test_authorized_client_has_form(self):
         for url in (URL.add, URL.edit):
