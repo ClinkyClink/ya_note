@@ -21,6 +21,10 @@ class TestRoutes(CommonTest):
             (URL.detail, self.user_client, HTTPStatus.NOT_FOUND),
             (URL.edit, self.user_client, HTTPStatus.NOT_FOUND),
             (URL.delete, self.user_client, HTTPStatus.NOT_FOUND),
+            (URL.detail, self.client, HTTPStatus.FOUND), 
+            (URL.edit, self.client, HTTPStatus.FOUND), 
+            (URL.delete, self.client, HTTPStatus.FOUND), 
+
         )
         for url, client, expected_status in urls:
             with self.subTest(url=url):
